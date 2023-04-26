@@ -12,6 +12,10 @@ inputs:
     description: 'Publish tarball to GitHub releases.'
     required: false
     default: false
+  node-version:
+    description: 'Node version number.'
+    required: false
+    default: ''
 branding:
   icon: 'package'
   color: 'purple'
@@ -21,13 +25,13 @@ runs:
     - name: Checkout Code
       uses: actions/checkout@v3
     - name: Install Node
-      if: ${{ inputs.node-version != '' }}
+      if: ${{ inputs['node-version'] != '' }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version: ${{ inputs['node-version'] }}
         cache: npm
     - name: Install Node
-      if: ${{ inputs.node-version == '' }}
+      if: ${{ inputs['node-version'] == '' }}
       uses: actions/setup-node@v3
       with:
         cache: npm
@@ -40,11 +44,11 @@ runs:
         mkdir -p dist
         npm pack --pack-destination=${{ inputs.dir }}
     - name: Release
-      if: ${{ inputs.github-release }}
+      if: ${{ inputs['github-release'] == true }}
       uses: softprops/action-gh-release@v1
       with:
         files: ${{ inputs.dir }}/*.tgz
     - name: Publish
-      if: ${{ inputs.npm-publish }}
+      if: ${{ inputs['npm-publish'] == true }}
       shell: bash
       run: npm publish

@@ -1,0 +1,48 @@
+name: 'Pack Neon Library'
+description: 'Pack and optionally publish a Neon library.'
+inputs:
+  dir:
+    description: 'Output directory for the tarball (created if necessary).'
+    required: true
+  npm-publish:
+    description: 'Publish tarball to npm.'
+    required: false
+    default: false
+  github-release:
+    description: 'Publish tarball to GitHub releases.'
+    required: false
+    default: false
+branding:
+  icon: 'package'
+  color: 'purple'
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    - name: Install Node
+      if: ${{ inputs.node-version != '' }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: npm
+    - name: Install Node
+      if: ${{ inputs.node-version == '' }}
+      uses: actions/setup-node@v3
+      with:
+        cache: npm
+    - name: Install Dependencies
+      run: npm install
+    - name: Pack
+      shell: bash
+      run: |
+        mkdir -p dist
+        npm pack --pack-destination=${{ inputs.dir }}
+    - name: Release
+      if: ${{ inputs.github-release }}
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ inputs.dir }}/*.tgz
+    - name: Publish
+      if: ${{ inputs.npm-publish }}
+      run: npm publish

@@ -32,6 +32,7 @@ runs:
       with:
         cache: npm
     - name: Install Dependencies
+      shell: bash
       run: npm install
     - name: Pack
       shell: bash
@@ -45,4 +46,5 @@ runs:
         files: ${{ inputs.dir }}/*.tgz
     - name: Publish
       if: ${{ inputs.npm-publish }}
+      shell: bash
       run: npm publish

@@ -43,12 +43,18 @@ runs:
       run: |
         mkdir -p dist
         npm pack --pack-destination=${{ inputs.dir }}
+    - name: Diagnostics
+      shell: bash
+      run: |
+        echo ${{ inputs['github-release'] }}
+        echo ${{ inputs['node-version'] }}
+        echo ${{ inputs['npm-publish'] }}
     - name: Release
-      if: ${{ inputs['github-release'] == true }}
+      if: ${{ inputs['github-release'] }}
       uses: softprops/action-gh-release@v1
       with:
         files: ${{ inputs.dir }}/*.tgz
     - name: Publish
-      if: ${{ inputs['npm-publish'] == true }}
+      if: ${{ inputs['npm-publish'] }}
       shell: bash
       run: npm publish

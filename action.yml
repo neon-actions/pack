@@ -50,11 +50,11 @@ runs:
         echo ${{ inputs['node-version'] }}
         echo ${{ inputs['npm-publish'] }}
     - name: Release
-      if: ${{ inputs['github-release'] }}
+      if: ${{ inputs['github-release'] == 'true' }}
       uses: softprops/action-gh-release@v1
       with:
         files: ${{ inputs.dir }}/*.tgz
     - name: Publish
-      if: ${{ inputs['npm-publish'] }}
+      if: ${{ inputs['npm-publish'] == 'true' }}
       shell: bash
       run: npm publish

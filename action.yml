@@ -1,9 +1,14 @@
 name: 'Pack Neon Library'
 description: 'Pack and optionally publish a Neon library.'
 inputs:
-  dir:
-    description: 'Output directory for the tarball (created if necessary).'
-    required: true
+  working-directory:
+    description: 'Working directory to run commands from, relative to repo root.'
+    required: false
+    default: '.'
+  output-directory:
+    description: 'Putput directory for the tarball, relative to working-directory (created if necessary).'
+    required: false
+    default: 'dist'
   npm-publish:
     description: 'Publish tarball to npm.'
     required: false
@@ -38,11 +43,13 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: npm install
+      working-directory: ${{ inputs['working-directory'] }}
     - name: Pack
       shell: bash
       run: |
         mkdir -p dist
-        npm pack --pack-destination=${{ inputs.dir }}
+        npm pack --pack-destination=${{ inputs['output-directory'] }}
+      working-directory: ${{ inputs['working-directory'] }}
     - name: Diagnostics
       shell: bash
       run: |
@@ -53,8 +60,9 @@ runs:
       if: ${{ inputs['github-release'] == 'true' }}
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ inputs.dir }}/*.tgz
+        files: ${{ inputs['working-directory'] }}/${{ inputs['output-directory'] }}/*.tgz
     - name: Publish
       if: ${{ inputs['npm-publish'] == 'true' }}
       shell: bash
       run: npm publish
+      working-directory: ${{ inputs['working-directory'] }}

@@ -48,6 +48,7 @@ runs:
       shell: bash
       run: |
         npm explain @neon-rs/cli
+      working-directory: ${{ inputs['working-directory'] }}
     - name: Pack
       shell: bash
       run: |

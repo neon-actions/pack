@@ -50,7 +50,7 @@ runs:
     - name: Pack
       shell: bash
       run: |
-        mkdir -p dist
+        mkdir -p ${{ inputs['output-directory'] }}
         npm pack --pack-destination=${{ inputs['output-directory'] }}
       working-directory: ${{ inputs['working-directory'] }}
     - name: Diagnostics

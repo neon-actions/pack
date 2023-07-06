@@ -44,6 +44,10 @@ runs:
       shell: bash
       run: npm install
       working-directory: ${{ inputs['working-directory'] }}
+    - name: Show Neon CLI Version
+      shell: bash
+      run: |
+        npm explain @neon-rs/cli
     - name: Pack
       shell: bash
       run: |
